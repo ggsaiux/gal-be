@@ -1,22 +1,20 @@
 package com.asociatialocatari.gestiune.base.controllers;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
-import com.asociatialocatari.gestiune.base.models.ERole;
-import com.asociatialocatari.gestiune.base.models.Role;
-import com.asociatialocatari.gestiune.base.models.User;
+
+import com.asociatialocatari.gestiune.base.models.*;
 import com.asociatialocatari.gestiune.base.payload.request.LoginRequest;
 import com.asociatialocatari.gestiune.base.payload.request.SignupRequest;
 import com.asociatialocatari.gestiune.base.payload.response.JwtResponse;
 import com.asociatialocatari.gestiune.base.payload.response.MessageResponse;
-import com.asociatialocatari.gestiune.base.repositories.RoleRepository;
-import com.asociatialocatari.gestiune.base.repositories.UserRepository;
+import com.asociatialocatari.gestiune.base.repositories.*;
 import com.asociatialocatari.gestiune.base.security.jwt.JwtUtils;
 import com.asociatialocatari.gestiune.base.security.services.UserDetailsImpl;
+import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -33,20 +31,38 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
-    @Autowired
-    AuthenticationManager authenticationManager;
 
-    @Autowired
-    UserRepository userRepository;
+    private static final String DEFAULT_ROLE = "USER";
+    private static final String DEFAULT_LNG = "ro";
+    private static final String DEFAULT_STT = "active";
+    private static final Logger logger = LoggerFactory.getLogger(AuthController.class);
 
-    @Autowired
-    RoleRepository roleRepository;
+    final AuthenticationManager authenticationManager;
 
-    @Autowired
-    PasswordEncoder encoder;
+    final UserRepository userRepository;
 
-    @Autowired
-    JwtUtils jwtUtils;
+    final RoleRepository roleRepository;
+
+    final PasswordEncoder encoder;
+
+    final JwtUtils jwtUtils;
+
+    final LngRepository lngRepository;
+
+    final SttRepository sttRepository;
+
+    final UserRoleRepository userRoleRepository;
+
+    public AuthController(AuthenticationManager authenticationManager, UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder encoder, JwtUtils jwtUtils, LngRepository lngRepository, SttRepository sttRepository, UserRoleRepository userRoleRepository) {
+        this.authenticationManager = authenticationManager;
+        this.userRepository = userRepository;
+        this.roleRepository = roleRepository;
+        this.encoder = encoder;
+        this.jwtUtils = jwtUtils;
+        this.lngRepository = lngRepository;
+        this.sttRepository = sttRepository;
+        this.userRoleRepository = userRoleRepository;
+    }
 
     @PostMapping("/signin")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
@@ -69,6 +85,7 @@ public class AuthController {
                 roles));
     }
 
+    @Transactional
     @PostMapping("/signup")
     public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
         if (userRepository.existsByUsername(signUpRequest.getUsername())) {
@@ -88,39 +105,74 @@ public class AuthController {
                 signUpRequest.getEmail(),
                 encoder.encode(signUpRequest.getPassword()));
 
-        Set<String> strRoles = signUpRequest.getRole();
-        Set<Role> roles = new HashSet<>();
+        //Set<String> strRoles = signUpRequest.getRole();
+        //Set<Role> roles = new HashSet<>();
 
-        if (strRoles == null) {
-            Role userRole = roleRepository.findByName(ERole.ROLE_USER)
+        try {
+/*
+            if (strRoles == null) {
+                Role userRole = roleRepository.findByName(ERole.USER)
+                        .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+                roles.add(userRole);
+            } else {
+                strRoles.forEach(role -> {
+                    switch (role) {
+
+                        case "user":
+                            Role userRole = roleRepository.findByName(ERole.USER)
+                                    .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+                            roles.add(userRole);
+
+                            break;
+
+                        case "admina":
+                            Role adminaRole = roleRepository.findByName(ERole.ADMIN_ASO)
+                                    .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+                            roles.add(adminaRole);
+
+                            break;
+
+                        case "admins":
+                            Role adminsRole = roleRepository.findByName(ERole.ADMIN_SYS)
+                                    .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+                            roles.add(adminsRole);
+
+                            break;
+                        case "loca":
+                            Role modRole = roleRepository.findByName(ERole.LOCATAR)
+                                    .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+                            roles.add(modRole);
+
+                            break;
+                        default:
+                            Role defaultRole = roleRepository.findByName(ERole.USER)
+                                    .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+                            roles.add(defaultRole);
+                    }
+                });
+            }
+            user.setRoles(roles);
+ */
+
+            Role defaultRole = roleRepository.findByName(ERole.USER)
                     .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
-            roles.add(userRole);
-        } else {
-            strRoles.forEach(role -> {
-                switch (role) {
-                    case "admin":
-                        Role adminRole = roleRepository.findByName(ERole.ROLE_ADMIN)
-                                .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
-                        roles.add(adminRole);
+            Lng defaultLng = lngRepository.findByAbbrv(DEFAULT_LNG)
+                    .orElseThrow(() -> new RuntimeException("Error: Language is not found."));
+            Stt defaultStt = sttRepository.findByName(DEFAULT_STT)
+                    .orElseThrow(() -> new RuntimeException("Error: State is not found."));
+            user.setRole(defaultRole);
+            user.setLng(defaultLng);
+            user.setStt(defaultStt);
 
-                        break;
-                    case "loc":
-                        Role modRole = roleRepository.findByName(ERole.ROLE_LOCATAR)
-                                .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
-                        roles.add(modRole);
-
-                        break;
-                    default:
-                        Role userRole = roleRepository.findByName(ERole.ROLE_USER)
-                                .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
-                        roles.add(userRole);
-                }
-            });
+            User userUp = userRepository.saveAndFlush(user);
+            UserRole userRole = new UserRole();
+            userRole.setUser(userUp);
+            userRole.setRole(defaultRole);
+            userRole.setStt(defaultStt);
+            userRoleRepository.saveAndFlush(userRole);
+        } catch(Exception e){
+            logger.error(e.getMessage());
         }
-
-        user.setRoles(roles);
-        userRepository.save(user);
-
         return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
     }
 }

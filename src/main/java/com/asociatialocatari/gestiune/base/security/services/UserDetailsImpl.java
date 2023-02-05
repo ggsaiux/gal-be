@@ -1,10 +1,12 @@
 package com.asociatialocatari.gestiune.base.security.services;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
+
+import com.asociatialocatari.gestiune.base.models.Role;
 import com.asociatialocatari.gestiune.base.models.User;
+import com.asociatialocatari.gestiune.base.repositories.UserRoleRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -24,6 +26,9 @@ public class UserDetailsImpl implements UserDetails {
     private String password;
 
     private Collection<? extends GrantedAuthority> authorities;
+    
+    @Autowired
+    static UserRoleRepository userRoleRepository;
 
     public UserDetailsImpl(Long id, String username, String email, String password,
                            Collection<? extends GrantedAuthority> authorities) {
@@ -34,11 +39,16 @@ public class UserDetailsImpl implements UserDetails {
         this.authorities = authorities;
     }
 
+    //todo getRoles from user_role by user.getId
     public static UserDetailsImpl build(User user) {
+/*
         List<GrantedAuthority> authorities = user.getRoles().stream()
                 .map(role -> new SimpleGrantedAuthority(role.getName().name()))
                 .collect(Collectors.toList());
-
+*/
+        List<GrantedAuthority> authorities = userRoleRepository.findRolesByUser(user).stream()
+                .map(role -> new SimpleGrantedAuthority(role.getName().name()))
+                .collect(Collectors.toList());
         return new UserDetailsImpl(
                 user.getId(),
                 user.getUsername(),

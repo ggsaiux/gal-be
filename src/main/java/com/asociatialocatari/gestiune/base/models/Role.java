@@ -6,7 +6,7 @@ import jakarta.persistence.*;
 //import javax.persistence.*;
 
 @Entity
-@Table(schema="gal", name = "roles")
+@Table(schema="gal", name = "role")
 public class Role {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
