@@ -2,7 +2,6 @@ package com.asociatialocatari.gestiune.base.security.services;
 
 import com.asociatialocatari.gestiune.base.models.User;
 import com.asociatialocatari.gestiune.base.repositories.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;

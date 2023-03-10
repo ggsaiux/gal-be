@@ -11,6 +11,7 @@ import com.asociatialocatari.gestiune.base.payload.response.MessageResponse;
 import com.asociatialocatari.gestiune.base.repositories.*;
 import com.asociatialocatari.gestiune.base.security.jwt.JwtUtils;
 import com.asociatialocatari.gestiune.base.security.services.UserDetailsImpl;
+import com.asociatialocatari.gestiune.base.security.services.UserDetailsServiceImpl;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
@@ -53,7 +54,18 @@ public class AuthController {
 
     final UserRoleRepository userRoleRepository;
 
-    public AuthController(AuthenticationManager authenticationManager, UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder encoder, JwtUtils jwtUtils, LngRepository lngRepository, SttRepository sttRepository, UserRoleRepository userRoleRepository) {
+    final UserDetailsServiceImpl userDetailsService;
+
+    public AuthController(
+            AuthenticationManager authenticationManager,
+            UserRepository userRepository,
+            RoleRepository roleRepository,
+            PasswordEncoder encoder,
+            JwtUtils jwtUtils,
+            LngRepository lngRepository,
+            SttRepository sttRepository,
+            UserRoleRepository userRoleRepository,
+            UserDetailsServiceImpl userDetailsService) {
         this.authenticationManager = authenticationManager;
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
@@ -62,6 +74,7 @@ public class AuthController {
         this.lngRepository = lngRepository;
         this.sttRepository = sttRepository;
         this.userRoleRepository = userRoleRepository;
+        this.userDetailsService = userDetailsService;
     }
 
     @PostMapping("/signin")
@@ -73,7 +86,8 @@ public class AuthController {
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String jwt = jwtUtils.generateJwtToken(authentication);
 
-        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+        //UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+        UserDetailsImpl userDetails = (UserDetailsImpl) userDetailsService.loadUserByUsername(loginRequest.getUsername());
         List<String> roles = userDetails.getAuthorities().stream()
                 .map(item -> item.getAuthority())
                 .collect(Collectors.toList());
@@ -154,13 +168,13 @@ public class AuthController {
             user.setRoles(roles);
  */
 
-            Role defaultRole = roleRepository.findByName(ERole.USER)
+            Role defaultRole = roleRepository.findByName(DEFAULT_ROLE)
                     .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
             Lng defaultLng = lngRepository.findByAbbrv(DEFAULT_LNG)
                     .orElseThrow(() -> new RuntimeException("Error: Language is not found."));
             Stt defaultStt = sttRepository.findByName(DEFAULT_STT)
                     .orElseThrow(() -> new RuntimeException("Error: State is not found."));
-            user.setRole(defaultRole);
+            //user.setRole(defaultRole);
             user.setLng(defaultLng);
             user.setStt(defaultStt);
 
@@ -168,7 +182,7 @@ public class AuthController {
             UserRole userRole = new UserRole();
             userRole.setUser(userUp);
             userRole.setRole(defaultRole);
-            userRole.setStt(defaultStt);
+            //userRole.setStt(defaultStt);
             userRoleRepository.saveAndFlush(userRole);
         } catch(Exception e){
             logger.error(e.getMessage());

@@ -2,9 +2,6 @@ package com.asociatialocatari.gestiune.base.models;
 
 import jakarta.persistence.*;
 
-
-//import javax.persistence.*;
-
 @Entity
 @Table(schema="gal", name = "role")
 public class Role {
@@ -12,18 +9,18 @@ public class Role {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Enumerated(EnumType.STRING)
-    @Column(length = 20)
-    private ERole name;
+    @Column(nullable = false, length = 15, unique = true)
+    private String name;
+    public Role() { }
 
-    public Role() {
-
-    }
-
-    public Role(ERole name) {
+    public Role(String name) {
         this.name = name;
     }
 
+    public Role(Integer id) {
+        super();
+        this.id = id;
+    }
     public Integer getId() {
         return id;
     }
@@ -32,11 +29,16 @@ public class Role {
         this.id = id;
     }
 
-    public ERole getName() {
+    public String getName() {
         return name;
     }
 
-    public void setName(ERole name) {
+    public void setName(String name) {
         this.name = name;
+    }
+
+    @Override
+    public String toString() {
+        return this.name;
     }
 }
