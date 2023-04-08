@@ -1,13 +1,12 @@
 -- GAL Gestiune Asociatii Locatari
--- init_gal.sql
+-- init_gal_base.sql
 
 drop table gal.user;
 drop table gal.rule;
 drop table gal.stt;
-drop table gal.aso;
 drop table gal.lng;
 drop table gal.role;
-
+drop table gal.user_role;
 
 -- gal.stt ----------------------------------------------
 create table gal.stt
@@ -23,20 +22,6 @@ create unique index stt_name__uindex on gal.stt (name);
 
 insert into gal.stt(id, name) values(1, 'active');
 insert into gal.stt(id, name) values(2, 'inactive');
-
--- gal.grp ----------------------------------------------
-create table gal.aso
-(
-    id          serial  not null
-        constraint aso_pk
-            primary key,
-    name      varchar not null,
-    description varchar
-);
-comment on table gal.aso is 'asociation';
-alter table gal.aso owner to postgres;
-create unique index aso_name__uindex on gal.aso (name);
-
 
 -- gal.lng -----------------------------------------------
 create table gal.lng
@@ -126,6 +111,8 @@ create table gal.user_role
     id_role     integer not null
         constraint user_role_role_id_fk
             references gal.role,
+    inserted    date    not null,
+    updated     date,
     id_stt      integer not null
         constraint user_stt_id_fk
             references gal.stt
@@ -133,7 +120,4 @@ create table gal.user_role
 comment on table gal.user_role is 'user role map';
 alter table gal.user_role owner to postgres;
 create unique index user_role__uindex on gal.user_role (id_user, id_role);
-
-
-
 

@@ -1,10 +1,7 @@
 package com.asociatialocatari.gestiune.base.security.services;
 
-import java.io.Serial;
 import java.util.*;
 import java.util.stream.Collectors;
-
-
 import com.asociatialocatari.gestiune.base.models.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
