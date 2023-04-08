@@ -4,9 +4,29 @@
 drop table gal.user;
 drop table gal.rule;
 drop table gal.stt;
+drop table gal.type;
 drop table gal.lng;
 drop table gal.role;
 drop table gal.user_role;
+
+
+-- gal.type ----------------------------------------------
+create table gal.type
+(
+    id    serial  not null
+        constraint type_pk
+            primary key ,
+    name varchar not null
+);
+comment on table gal.type is 'type of state';
+alter table gal.type owner to postgres;
+create unique index type_name__uindex on gal.type (name);
+
+insert into gal.type(name) values('general');
+insert into gal.type(name) values('user');
+insert into gal.type(name) values('aso');
+insert into gal.type(name) values('rule');
+
 
 -- gal.stt ----------------------------------------------
 create table gal.stt
@@ -14,14 +34,19 @@ create table gal.stt
     id    serial  not null
         constraint stt_pk
             primary key ,
-    name varchar not null
+    name varchar not null,
+    id_type integer not null
+        constraint stt_type_id_fk
+            references gal.type
 );
 comment on table gal.stt is 'state';
 alter table gal.stt owner to postgres;
 create unique index stt_name__uindex on gal.stt (name);
 
-insert into gal.stt(id, name) values(1, 'active');
-insert into gal.stt(id, name) values(2, 'inactive');
+insert into gal.stt(name, id_type) values('active', 1);
+insert into gal.stt(name, id_type) values('inactive', 1);
+insert into gal.stt(name, id_type) values('deleted', 1);
+
 
 -- gal.lng -----------------------------------------------
 create table gal.lng
@@ -29,7 +54,7 @@ create table gal.lng
     id    serial  not null
         constraint lng_pk
             primary key,
-    abrv varchar not null,
+    abbrv varchar not null,
     name varchar not null,
     image bytea
 );
@@ -37,9 +62,9 @@ comment on table gal.lng is 'language';
 alter table gal.lng owner to postgres;
 create unique index lng_name__uindex on gal.lng (name);
 
-insert into gal.lng(id, abbrv, name) values(1, 'en', 'english');
-insert into gal.lng(id, abbrv, name) values(2, 'de', 'deutsch');
-insert into gal.lng(id, abbrv, name) values(0, 'ro', 'romana');
+insert into gal.lng(abbrv, name) values('en', 'english');
+insert into gal.lng(abbrv, name) values('de', 'deutsch');
+insert into gal.lng(abbrv, name) values('ro', 'romana');
 
 -- gal.role -----------------------------------------------
 create table gal.role
@@ -54,10 +79,10 @@ comment on table gal.role is 'role';
 alter table gal.role owner to postgres;
 create unique index role_name__uindex on gal.role (name);
 
-insert into gal.role(id, name, description) values(1, 'ADMIN_SYS', 'System Administrator');
-insert into gal.role(id, name, description) values(2, 'ADMIN_ASO', 'Association Administrator');
-insert into gal.role(id, name, description) values(3, 'LOCATAR', 'Locatar');
-insert into gal.role(id, name, description) values(3, 'USER', 'User');
+insert into gal.role(name, description) values('ADMIN_SYS', 'System Administrator');
+insert into gal.role(name, description) values('ADMIN_ASO', 'Association Administrator');
+insert into gal.role(name, description) values('LOCATAR', 'Locatar');
+insert into gal.role(name, description) values('USER', 'User');
 
 -- gal.rule -----------------------------------------------
 create table gal.rule
@@ -84,9 +109,6 @@ create table gal.user
     email          varchar not null,
     inserted    date    not null,
     updated     date,
-    id_role     integer not null
-        constraint user_role_id_fk
-            references gal.role,
     id_lng      integer not null
         constraint user_lng_id_fk
             references gal.lng,
