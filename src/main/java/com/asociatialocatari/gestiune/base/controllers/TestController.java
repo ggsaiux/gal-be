@@ -23,13 +23,13 @@ public class TestController {
     }
 
     @GetMapping("/loca")
-    @PreAuthorize("hasRole('LOCATAR')")
+    @PreAuthorize("hasRole('LOCA')")
     public String locaAccess() {
         return "Locatar Board.";
     }
 
     @GetMapping("/admina")
-    @PreAuthorize("hasRole('ADMIN_ASO')")
+    @PreAuthorize("hasRole('ADMIN_ASSO')")
     public String adminaAccess() {
         return "Association Administrator Board.";
     }

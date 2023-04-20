@@ -1,4 +1,6 @@
-package com.asociatialocatari.gestiune.build_stair;
+package com.asociatialocatari.gestiune.asso;
+
+import java.time.LocalDateTime;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
@@ -6,32 +8,27 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 
-import java.time.LocalDateTime;
+import com.asociatialocatari.gestiune.base.models.Stt;
 
 @Data
 @Entity
-@Table(name = "build_stair", schema = "gal")
+@Table(name = "asso", schema = "gal")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-public class BuildStair {
+public class Asso {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO, generator = "build_stair_gen")
-    @SequenceGenerator(name = "build_stair_gen", sequenceName = "gal.build_stair_id_seq")
+    @GeneratedValue(strategy = GenerationType.AUTO, generator = "asso_gen")
+    @SequenceGenerator(name = "asso_gen", sequenceName = "gal.asso_id_seq")
     private Long id;
 
     @NotBlank
-    @Size(min = 3, max = 50)
-    @Column(name = "name")
+    @Size(min = 2, max = 40)
+    @Column(columnDefinition = "name")
     private String name;
 
-    @NotBlank
-    @Column(name = "number")
-    private Integer number;
-
-    @NotBlank
-    @Size(min = 1, max = 3)
-    @Column(name = "stair")
-    private String stair;
+    @Size(max = 100)
+    @Column(name = "description")
+    private String description;
 
     @NotBlank
     @Size(max = 150)
@@ -43,4 +40,8 @@ public class BuildStair {
 
     @Column(name ="updated", columnDefinition = "TIMESTAMP", nullable = false)
     private LocalDateTime updated;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(foreignKey = @ForeignKey(name = "aso_stt_id_fk"), name = "id_stt")
+    private Stt stt;
 }

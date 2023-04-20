@@ -16,15 +16,15 @@ public class UserRole {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_user")
+    @JoinColumn(foreignKey = @ForeignKey(name = "user_role_user_id_fk"), name = "id_user")
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_role")
+    @JoinColumn(foreignKey = @ForeignKey(name = "user_role_role_id_fk"), name = "id_role")
     private Role role;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_stt")
+    @JoinColumn(foreignKey = @ForeignKey(name = "user_role_stt_id_fk"), name = "id_stt")
     private Stt stt;
 
     @Column(name ="inserted", columnDefinition = "TIMESTAMP", nullable = false, updatable = false)

@@ -140,7 +140,7 @@ public class AuthController {
                             break;
 
                         case "admina":
-                            Role adminaRole = roleRepository.findByName(ERole.ADMIN_ASO)
+                            Role adminaRole = roleRepository.findByName(ERole.ADMIN_ASSO)
                                     .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
                             roles.add(adminaRole);
 

@@ -1,6 +1,8 @@
 -- GAL Gestiune Asociatii Locatari
 -- init_gal_base.sql
 
+drop table gal.multi_lng;
+drop table gal.entman;
 drop table gal.user;
 drop table gal.rule;
 drop table gal.stt;
@@ -8,6 +10,38 @@ drop table gal.type;
 drop table gal.lng;
 drop table gal.role;
 drop table gal.user_role;
+
+
+-- gal.multi_lng -----------------------------------------------
+create table if not exists gal.multi_lng
+(
+    id        serial
+        constraint multi_lng_pk
+            primary key,
+    base_name varchar,
+    lng_name  varchar,
+    id_entman integer not null
+        constraint multi_lng_entman_id_fk
+            references gal.entman,
+    id_lng integer not null
+        constraint multi_lng_lng_id_fk
+            references gal.lng
+);
+comment on table gal.multi_lng is 'map english name to other language';
+create unique index multi_lng__uindex on gal.multi_lng (base_name, id_entman, id_lng);
+
+
+-- gal.entman -----------------------------------------------
+create table if not exists gal.entman
+(
+    id        serial
+        constraint entman_pk
+            primary key,
+    table_name varchar
+
+);
+comment on table gal.entman is 'table names to map multi_lng';
+create unique index entman__uindex on gal.entman (table_name);
 
 
 -- gal.type ----------------------------------------------
@@ -27,7 +61,6 @@ insert into gal.type(name) values('user');
 insert into gal.type(name) values('aso');
 insert into gal.type(name) values('rule');
 
-
 -- gal.stt ----------------------------------------------
 create table gal.stt
 (
@@ -46,7 +79,6 @@ create unique index stt_name__uindex on gal.stt (name);
 insert into gal.stt(name, id_type) values('active', 1);
 insert into gal.stt(name, id_type) values('inactive', 1);
 insert into gal.stt(name, id_type) values('deleted', 1);
-
 
 -- gal.lng -----------------------------------------------
 create table gal.lng
@@ -97,7 +129,6 @@ comment on table gal.rule is 'rule';
 alter table gal.rule owner to postgres;
 create unique index rule_name__uindex on gal.rule (name);
 
-
 -- gal.user -----------------------------------------------
 create table gal.user
 (
@@ -136,7 +167,7 @@ create table gal.user_role
     inserted    date    not null,
     updated     date,
     id_stt      integer not null
-        constraint user_stt_id_fk
+        constraint user_role_stt_id_fk
             references gal.stt
 );
 comment on table gal.user_role is 'user role map';
