@@ -1,4 +1,4 @@
-package com.asociatialocatari.gal.apartment;
+package com.asociatialocatari.gal.apart;
 
 import com.asociatialocatari.gal.base.models.Stt;
 import com.asociatialocatari.gal.base.models.User;
@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "user_apartment", schema = "gal")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-public class UserApartment {
+public class UserApart {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "user_apartment_gen")
@@ -25,7 +25,7 @@ public class UserApartment {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(foreignKey = @ForeignKey(name = "user_apartment_apartment_id_fk"), name = "id_apartment")
-    private Apartment apartment;
+    private Apart apartment;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(foreignKey = @ForeignKey(name = "user_apartment_stt_id_fk"), name = "id_stt")

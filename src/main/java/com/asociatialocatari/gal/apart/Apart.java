@@ -1,4 +1,4 @@
-package com.asociatialocatari.gal.apartment;
+package com.asociatialocatari.gal.apart;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
@@ -11,12 +11,12 @@ import java.time.LocalDateTime;
 
 @Data
 @Entity
-@Table(name = "apartment", schema = "gal")
+@Table(name = "apart", schema = "gal")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-public class Apartment {
+public class Apart {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "apartment_id_seq")
-    @SequenceGenerator(sequenceName = "gal.apartment_id_seq", allocationSize = 1, name = "apartment_id_seq")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "apart_id_seq")
+    @SequenceGenerator(sequenceName = "gal.apart_id_seq", allocationSize = 1, name = "apart_id_seq")
     private Long id;
 
     @NotBlank

@@ -4,11 +4,12 @@
 --drop table gal.user_apartment;
 --drop table gal.build_stair_apartment;
 --drop table gal.asso_build_stair;
---drop table gal.asso;
---drop table gal.build_stair;
---drop table gal.apartment;
 --drop table gal.aso_build_stair;
 --drop table gal.build_stair_apartment;
+--drop table gal.apart;
+--drop table gal.asso;
+--drop table gal.build_stair;
+--drop table gal.district;
 
 
 -- gal.association -----------------------------------------------
@@ -29,6 +30,23 @@ comment on table gal.asso is 'association';
 alter table gal.asso owner to postgres;
 create unique index asso_name__uindex on gal.asso (name);
 
+-- gal.district -----------------------------------------------
+create table gal.district
+(
+    id          serial not null
+        constraint district_pk
+            primary key,
+    name        varchar not null,
+    description varchar,
+    city    varchar not null,
+    inserted    date    not null,
+    updated     date,
+    id_stt      integer not null
+);
+
+comment on table gal.district is 'district';
+alter table gal.district owner to postgres;
+create unique index district_name__uindex on gal.district (name);
 
 -- gal.build_stair -----------------------------------------------
 create table gal.build_stair
@@ -37,19 +55,24 @@ create table gal.build_stair
         constraint build_stair_pk
             primary key,
     number   integer not null,
-    stair    varchar not null,
+    name    varchar,
     address  varchar not null,
     inserted date    not null,
     updated  date,
-    name     integer
+    id_stt     integer not null
+        constraint build_stair_stt_id_fk
+            references gal.stt,
+    id_district integer not null
+        constraint build_stair_district_id_fk
+            references gal.district
 );
 
 comment on table gal.build_stair is 'build and stair';
 alter table gal.build_stair owner to postgres;
-create unique index build_stair__uindex on gal.build_stair (number, stair, address);
+create unique index build_stair_district__uindex on gal.build_stair (number, stair, id_district);
 
--- gal.apartment -----------------------------------------------
-create table gal.apartment
+-- gal.apart -----------------------------------------------
+create table gal.apart
 (
     id             serial not null
         constraint apartment_pk
@@ -63,9 +86,9 @@ create table gal.apartment
     updated        date
 );
 
-comment on table gal.apartment is 'apartment';
-comment on column gal.apartment.m2 is 'square metre';
-alter table gal.apartment owner to postgres;
+comment on table gal.apart is 'apart';
+comment on column gal.apart.m2 is 'square metre';
+alter table gal.apart owner to postgres;
 
 -- gal.aso_build_stair -----------------------------------------------
 create table gal.asso_build_stair
@@ -90,26 +113,26 @@ alter table gal.asso_build_stair owner to postgres;
 create unique index asso_build_stair__uindex on gal.asso_build_stair (id_asso, id_build_stair);
 
 -- gal.build_stair_apartment -----------------------------------------------
-create table gal.build_stair_apartment
+create table gal.build_stair_apart
 (
     id          serial  not null
-        constraint build_stair_apartment_pk
+        constraint build_stair_apart_pk
             primary key,
     id_build_stair     integer not null
-        constraint build_stair_apartment_build_stair_id_fk
+        constraint build_stair_apart_build_stair_id_fk
             references gal.build_stair,
-    id_apartment     integer not null
-        constraint build_stair_apartment_apartment_id_fk
-            references gal.apartment,
+    id_apart     integer not null
+        constraint build_stair_apart_apart_id_fk
+            references gal.apart,
     inserted    date    not null,
     updated     date,
     id_stt      integer not null
-        constraint build_stair_apartment_stt_id_fk
+        constraint build_stair_apart_stt_id_fk
             references gal.stt
 );
-comment on table gal.build_stair_apartment is 'build stair apartment map';
-alter table gal.build_stair_apartment owner to postgres;
-create unique index build_stair_apartment__uindex on gal.build_stair_apartment (id_build_stair, id_apartment);
+comment on table gal.build_stair_apart is 'build stair apart map';
+alter table gal.build_stair_apart owner to postgres;
+create unique index build_stair_apart__uindex on gal.build_stair_apart (id_build_stair, id_apart);
 
 -- gal.user_apartment -----------------------------------------------
 create table gal.user_apartment
@@ -122,14 +145,14 @@ create table gal.user_apartment
             references gal.user,
     id_apartment     integer not null
         constraint user_apartment_apartment_id_fk
-            references gal.apartment,
+            references gal.apart,
     inserted    date    not null,
     updated     date,
     id_stt      integer not null
         constraint user_apartment_stt_id_fk
             references gal.stt
 );
-comment on table gal.user_apartment is 'user apartment map';
+comment on table gal.user_apartment is 'user apart map';
 alter table gal.user_apartment owner to postgres;
 create unique index user_apartment__uindex on gal.user_apartment (id_user, id_apartment);
 

@@ -1,4 +1,4 @@
-package com.asociatialocatari.gal.apartment;
+package com.asociatialocatari.gal.apart;
 
 import com.asociatialocatari.gal.base.models.User;
 import com.asociatialocatari.gal.build_stair.BuildStair;
@@ -9,11 +9,11 @@ import java.util.Set;
 @Service
 public class ApartmentService {
 
-    protected Set<Apartment> apartmentSetByUser(User user){
+    protected Set<Apart> apartmentSetByUser(User user){
         return null;
     }
 
-    protected Set<Apartment> apartmentSetByBuildStair(BuildStair buildStair){
+    protected Set<Apart> apartmentSetByBuildStair(BuildStair buildStair){
         return null;
     }
 

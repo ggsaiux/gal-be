@@ -24,7 +24,7 @@ public class UserAsso {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_asso_id_seq")
-    @SequenceGenerator(sequenceName = "gal.user_asso_id_seq", allocationSize = 1, name = "user_asso_gid_seq")
+    @SequenceGenerator(sequenceName = "gal.user_asso_id_seq", allocationSize = 1, name = "user_asso_id_seq")
     private Long id;
 
     @ManyToOne(fetch = FetchType.EAGER)
@@ -43,5 +43,5 @@ public class UserAsso {
     private LocalDateTime inserted = LocalDateTime.now();
 
     @Column(name ="updated", columnDefinition = "TIMESTAMP", nullable = false)
-    private LocalDateTime updated;
+    private LocalDateTime updated = LocalDateTime.now();
 }

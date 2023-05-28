@@ -1,5 +1,7 @@
 package com.asociatialocatari.gal.build_stair;
 
+import com.asociatialocatari.gal.base.models.Stt;
+import com.asociatialocatari.gal.district.District;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
@@ -11,12 +13,12 @@ import java.time.LocalDateTime;
 @Data
 @Entity
 @Table(name = "build_stair", schema = "gal")
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+//@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class BuildStair {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO, generator = "build_stair_gen")
-    @SequenceGenerator(name = "build_stair_gen", sequenceName = "gal.build_stair_id_seq")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "build_stair_id_seq")
+    @SequenceGenerator(sequenceName = "gal.build_stair_id_seq", allocationSize = 1, name = "build_stair_id_seq")
     private Long id;
 
     @NotBlank
@@ -38,9 +40,17 @@ public class BuildStair {
     @Column(name = "address")
     private String address;
 
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(foreignKey = @ForeignKey(name = "build_stair_district_id_fk"), name = "id_district", referencedColumnName = "id")
+    private District district;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(foreignKey = @ForeignKey(name = "build_stair_stt_id_fk"), name = "id_stt", referencedColumnName = "id")
+    private Stt stt;
+
     @Column(name ="inserted", columnDefinition = "TIMESTAMP", nullable = false, updatable = false)
     private LocalDateTime inserted = LocalDateTime.now();
 
     @Column(name ="updated", columnDefinition = "TIMESTAMP", nullable = false)
-    private LocalDateTime updated;
+    private LocalDateTime updated = LocalDateTime.now();
 }
