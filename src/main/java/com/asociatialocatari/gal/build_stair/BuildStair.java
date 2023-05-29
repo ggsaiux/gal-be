@@ -2,7 +2,7 @@ package com.asociatialocatari.gal.build_stair;
 
 import com.asociatialocatari.gal.base.models.Stt;
 import com.asociatialocatari.gal.district.District;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+//import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;

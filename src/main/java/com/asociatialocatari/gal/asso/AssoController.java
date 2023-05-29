@@ -18,15 +18,15 @@ public class AssoController {
 
     private final UserAssoRepository userAssoRepository;
 
-    private final UserAssoServiceImpl userAssoServiceImpl;
+    private final UserAssoService userAssoService;
 
     private final AssoService assoService;
     private final AssoRepository assoRepository;
     private final Utils utils;
 
-    public AssoController(UserAssoRepository userAssoRepository, UserAssoServiceImpl userAssoServiceImpl, AssoService assoService, AssoRepository assoRepository, Utils utils) {
+    public AssoController(UserAssoRepository userAssoRepository, UserAssoService userAssoService, AssoService assoService, AssoRepository assoRepository, Utils utils) {
         this.userAssoRepository = userAssoRepository;
-        this.userAssoServiceImpl = userAssoServiceImpl;
+        this.userAssoService = userAssoService;
         this.assoService = assoService;
         this.assoRepository = assoRepository;
         this.utils = utils;
@@ -34,9 +34,9 @@ public class AssoController {
 
     @GetMapping("ua") //user's assos
     @PreAuthorize("hasAuthority('ADMINA')")
-    public ResponseEntity<?> getAssoByUser(){
+    public ResponseEntity<?> getAssosByUser(){
         try {
-            return new ResponseEntity<>(userAssoServiceImpl.getAssoListByUser(), HttpStatus.OK);
+            return new ResponseEntity<>(userAssoService.getAssosByUser(), HttpStatus.OK);
         } catch(Exception e){
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }

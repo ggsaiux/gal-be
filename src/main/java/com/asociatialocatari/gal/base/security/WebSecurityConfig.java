@@ -72,6 +72,7 @@ public class WebSecurityConfig {
                         .requestMatchers("/swagger-ui", "/rest-api-docs").permitAll()
                         .requestMatchers("/api/test/**").permitAll()
                         .requestMatchers("/api/assos/**").permitAll()
+                        .requestMatchers("/api/bss/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement((session) -> session

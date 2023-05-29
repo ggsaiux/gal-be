@@ -1,8 +1,6 @@
 package com.asociatialocatari.gal.build_stair;
 
-import com.asociatialocatari.gal.asso.AssoBuildStairRepository;
 import com.asociatialocatari.gal.base.ResourceNotFoundException;
-import com.asociatialocatari.gal.base.Utils;
 import com.asociatialocatari.gal.base.exception.UserException;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
@@ -15,11 +13,11 @@ import org.springframework.web.bind.annotation.*;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
-@RequestMapping("/api/builds/")
+@RequestMapping("/api/bss/")
 public class BuildStairController {
     private static final Logger logger = LoggerFactory.getLogger(BuildStairController.class);
 
-    private final Utils utils;
+    private final AssoBuildStairService assoBuildStairService;
 
     private final BuildStairService buildStairService;
 
@@ -27,18 +25,26 @@ public class BuildStairController {
 
     private final AssoBuildStairRepository assoBuildStairRepository;
 
-    public BuildStairController(Utils utils, BuildStairService buildStairService, BuildStairRepository buildStairRepository, AssoBuildStairRepository assoBuildStairRepository) {
-        this.utils = utils;
+    public BuildStairController(BuildStairService buildStairService,
+                                AssoBuildStairService assoBuildStairService,
+                                BuildStairRepository buildStairRepository,
+                                AssoBuildStairRepository assoBuildStairRepository) {
+        this.assoBuildStairService = assoBuildStairService;
         this.buildStairService = buildStairService;
         this.buildStairRepository = buildStairRepository;
         this.assoBuildStairRepository = assoBuildStairRepository;
     }
 
-    @GetMapping("asso/{id}") //district build stair by asso
+    /**
+     * get builds stairs by asso
+     * @param assoId
+     * @return
+     */
+    @GetMapping("abs/{assoId}")
     @PreAuthorize("hasAuthority('ADMINA')")
-    public ResponseEntity<?> getBuildStairs(@PathVariable long assoId){
+    public ResponseEntity<?> getBuildsStairsByAsso(@PathVariable long assoId){
         try {
-            return new ResponseEntity<>(buildStairService.getAllBuildStairByAsso(assoId), HttpStatus.OK);
+            return new ResponseEntity<>(assoBuildStairService.getBuildsStairsByAsso(assoId), HttpStatus.OK);
         } catch(Exception e){
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
