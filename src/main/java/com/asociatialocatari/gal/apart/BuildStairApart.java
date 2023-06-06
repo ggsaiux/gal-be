@@ -1,7 +1,8 @@
-package com.asociatialocatari.gal.build_stair;
+package com.asociatialocatari.gal.apart;
 
 import com.asociatialocatari.gal.apart.Apart;
 import com.asociatialocatari.gal.base.models.Stt;
+import com.asociatialocatari.gal.build_stair.BuildStair;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -13,6 +14,16 @@ import java.time.LocalDateTime;
 @Table(name = "build_stair_apart", schema = "gal")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class BuildStairApart {
+
+    public BuildStairApart(){
+
+    }
+
+    public BuildStairApart(BuildStair buildStair, Apart apart, Stt stt) {
+        this.buildStair = buildStair;
+        this.apart = apart;
+        this.stt = stt;
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "build_stair_apart_gen")
@@ -36,4 +47,5 @@ public class BuildStairApart {
 
     @Column(name ="updated", columnDefinition = "TIMESTAMP", nullable = false)
     private LocalDateTime updated;
+
 }

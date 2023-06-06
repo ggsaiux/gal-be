@@ -41,4 +41,6 @@ public class Apart {
     @Column(name ="updated", columnDefinition = "TIMESTAMP", nullable = false)
     private LocalDateTime updated;
 
+    //todo evaluate stt here
+
 }

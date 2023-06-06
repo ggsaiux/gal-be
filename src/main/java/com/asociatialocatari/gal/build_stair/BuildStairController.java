@@ -60,32 +60,45 @@ public class BuildStairController {
         }
     }
 
-    @PostMapping("")
+    /**
+     *
+     * @param id  - assoId
+     * @param buildStairDto
+     * @return
+     */
+    @PostMapping("{id}")
     @PreAuthorize("hasAuthority('ADMINA')")
-    public ResponseEntity<?> addBuildStair(@Valid @RequestBody BuildStairDto buildStairDto) {
+    public ResponseEntity<?> addBuildStair(@PathVariable("id") long id,
+                                           @Valid @RequestBody BuildStairDto buildStairDto) {
         try {
-            return new ResponseEntity<>(buildStairService.saveBuildStair(buildStairDto), HttpStatus.OK);
+            return new ResponseEntity<>(buildStairService.saveBuildStair(buildStairDto, id), HttpStatus.OK);
         } catch(Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
+    /**
+     *
+     * @param id - assoId
+     * @param buildStairDto
+     * @return
+     */
     @PatchMapping("{id}")
     @PreAuthorize("hasAuthority('ADMINA')")
     public ResponseEntity<?> saveBuildStair(@PathVariable("id") long id,
                                       @Valid @RequestBody BuildStairDto buildStairDto) {
         try {
             buildStairDto.setId(id);
-            return new ResponseEntity<>(buildStairService.saveBuildStair(buildStairDto), HttpStatus.OK);
+            return new ResponseEntity<>(buildStairService.saveBuildStair(buildStairDto, id), HttpStatus.OK);
         } catch(Exception e) {
             //todo error handler
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
-
     @Transactional
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('ADMINA')")
     public ResponseEntity<?> deleteBuildStair(@PathVariable Long id) throws UserException {
         if(!buildStairRepository.existsById(id)) {
             throw new ResourceNotFoundException("Build - Stair  not found with id " + id);
@@ -98,5 +111,4 @@ public class BuildStairController {
                     return ResponseEntity.ok().build();
                 }).orElseThrow(() -> new ResourceNotFoundException("Asscociation not found with id " + id));
     }
-
 }

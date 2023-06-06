@@ -13,6 +13,14 @@ import java.time.LocalDateTime;
 @Table(name = "asso_build_stair", schema = "gal")
 public class AssoBuildStair {
 
+    public AssoBuildStair() {
+    }
+
+    public AssoBuildStair(Asso asso, BuildStair buildStair, Stt stt){
+        this.asso = asso;
+        this.buildStair = buildStair;
+        this.stt = stt;
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "asso_build_stair_gen")

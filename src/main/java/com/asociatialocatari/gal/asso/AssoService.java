@@ -11,7 +11,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
-import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
@@ -42,45 +41,6 @@ public class AssoService {
         return null;
     }
 
-    public Map<String,AssoDto> saveAsso(AssoDto assoDto) throws GalException {
-
-        Map<String,AssoDto> mapAssoDto = new HashMap<>();
-        try {
-            if(assoDto != null) {
-                User user = utils.getUserFromContext();
-                Asso asso = new Asso();
-                if(assoDto.getId() != null){
-                    Optional<Asso> assoOpt = assoRepository.findById(assoDto.getId());
-                    if (assoOpt.isPresent()) {
-                        asso = assoOpt.get();
-                        if (assoDto.getName() != null)
-                            asso.setName(assoDto.getName());
-                        if (assoDto.getDescription() != null)
-                            asso.setDescription(assoDto.getDescription());
-                        if (assoDto.getAddress() != null)
-                            asso.setAddress(assoDto.getAddress());
-                        asso.setUpdated(LocalDateTime.now());
-                        assoRepository.save(asso);
-                    } else {
-                        logger.error("Error on Association saving!");
-                        throw new GalException("Error on Association saving!", ErrorEnum.RUNTIME_ERROR);
-                    }
-                } else {
-                    Optional<Stt> sttActiveOpt = sttRepository.findById(1l);
-                    asso = mapper.toAsso(assoDto);
-                    asso.setStt(sttActiveOpt.get()); //set state active
-                    assoRepository.save(asso);
-                    userAssoRepository.save(new UserAsso(user, asso, sttActiveOpt.get()));
-                }
-                mapAssoDto.put(ASSO, mapper.toAssoDto(asso));
-            }
-        } catch(Exception e) {
-            logger.error(e.getMessage(), e.getStackTrace());
-            throw new GalException("Error on Association saving!", ErrorEnum.RUNTIME_ERROR);
-        }
-        return mapAssoDto;
-    }
-
     public Map<String,AssoDto> getAssoById(long id) throws GalException {
         //todo logs
         //todo exceptions
@@ -99,6 +59,48 @@ public class AssoService {
         } catch( Exception e) {
             logger.error(e.getMessage(), e.getStackTrace());
             throw new GalException("Error on Association finding!", ErrorEnum.RUNTIME_ERROR);
+        }
+        return mapAssoDto;
+    }
+
+    public Map<String,AssoDto> saveAsso(AssoDto assoDto) throws GalException {
+        //todo logs
+        //todo exceptions
+
+        Map<String,AssoDto> mapAssoDto = new HashMap<>();
+        try {
+            if(assoDto != null) {
+                User user = utils.getUserFromContext();
+                Asso asso = new Asso();
+                if(assoDto.getId() != null){
+                    Optional<Asso> assoOpt = assoRepository.findById(assoDto.getId());
+                    if (assoOpt.isPresent()) {
+                        asso = assoOpt.get();
+                        //asso = mapper.toAsso(assoDto);
+                        if (assoDto.getName() != null)
+                            asso.setName(assoDto.getName());
+                        if (assoDto.getDescription() != null)
+                            asso.setDescription(assoDto.getDescription());
+                        if (assoDto.getAddress() != null)
+                            asso.setAddress(assoDto.getAddress());
+                        //asso.setUpdated(LocalDateTime.now());
+                        assoRepository.save(asso);
+                    } else {
+                        logger.error("Error on Association saving!");
+                        throw new GalException("Error on Association saving!", ErrorEnum.RUNTIME_ERROR);
+                    }
+                } else {
+                    Optional<Stt> sttActiveOpt = sttRepository.findById(1l);
+                    asso = mapper.toAsso(assoDto);
+                    asso.setStt(sttActiveOpt.get()); //set state active
+                    assoRepository.save(asso);
+                    userAssoRepository.save(new UserAsso(user, asso, sttActiveOpt.get()));
+                }
+                mapAssoDto.put(ASSO, mapper.toAssoDto(asso));
+            }
+        } catch(Exception e) {
+            logger.error(e.getMessage(), e.getStackTrace());
+            throw new GalException("Error on Association saving!", ErrorEnum.RUNTIME_ERROR);
         }
         return mapAssoDto;
     }
