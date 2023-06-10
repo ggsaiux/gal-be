@@ -21,7 +21,7 @@ public class BuildStairService {
     private final BuildStairMapper mapper = Mappers.getMapper(BuildStairMapper.class);
 
     //BSS = Builds Stairs
-    private final String BSS = "buildsStairs";  // todo singular
+    private final String BSS = "buildStair";  // todo singular
 
     private BuildStairRepository buildStairRepository;
 

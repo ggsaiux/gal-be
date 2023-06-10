@@ -77,7 +77,7 @@ create table gal.apart
     id             serial not null
         constraint apartment_pk
             primary key,
-    number         varchar not null,
+    number         integer not null,
     last_name      varchar not null,
     first_name     varchar not null,
     tenants_number integer not null,

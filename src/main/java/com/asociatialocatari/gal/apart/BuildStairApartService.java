@@ -25,7 +25,7 @@ public class BuildStairApartService {
     private final ApartMapper mapper = Mappers.getMapper(ApartMapper.class);
 
     //BSS = Builds Stairs
-    private final String BSS = "buildsStairs";
+    private final String APARTS = "aparts";
 
     public BuildStairApartService(BuildStairRepository buildStairRepository, BuildStairApartRepository buildStairApartRepository) {
         this.buildStairRepository = buildStairRepository;
@@ -33,7 +33,8 @@ public class BuildStairApartService {
     }
 
     public Map<String, List<ApartDto>> getApartsByBuildStair(long id) throws GalException {
-        //todo
+        //todo logs
+        //todo exceptions
         Optional<BuildStair> buildStairOpt = buildStairRepository.findById(id);
 
         if(!buildStairOpt.isPresent())
@@ -46,7 +47,7 @@ public class BuildStairApartService {
             for (BuildStairApart buildStairApart : buildStairApartList) {
                 apartDtoList.add(mapper.toApartDto(buildStairApart.getApart()));
             }
-            mapApartDtoList.put(BSS, apartDtoList);
+            mapApartDtoList.put(APARTS, apartDtoList);
         } catch(Exception e) {
             logger.error(e.getMessage(), e.getStackTrace());
             throw new GalException("Error on apartments listing!", RUNTIME_ERROR);

@@ -1,6 +1,5 @@
 package com.asociatialocatari.gal.apart;
 
-import com.asociatialocatari.gal.asso.Asso;
 import com.asociatialocatari.gal.base.exception.ErrorEnum;
 import com.asociatialocatari.gal.base.exception.GalException;
 import com.asociatialocatari.gal.base.models.Stt;

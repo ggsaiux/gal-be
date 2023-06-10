@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
+
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -18,6 +19,10 @@ public class Apart {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "apart_id_seq")
     @SequenceGenerator(sequenceName = "gal.apart_id_seq", allocationSize = 1, name = "apart_id_seq")
     private Long id;
+
+    @NotBlank
+    @Column(name = "number")
+    private Integer number;
 
     @NotBlank
     @Size(min = 2, max = 40)

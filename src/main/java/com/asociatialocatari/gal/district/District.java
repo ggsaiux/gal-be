@@ -2,6 +2,7 @@ package com.asociatialocatari.gal.district;
 
 import com.asociatialocatari.gal.base.models.Stt;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -16,14 +17,19 @@ public class District {
     private Long id;
 
     @Column
+    @Size(min=2, max=30)
     private String name;
 
+    /*
     @Column
     private String description;
+     */
 
     @Column
+    @Size(min=2, max=30)
     private String city;
 
+    /*
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(foreignKey = @ForeignKey(name = "district_stt_id_fk"), name = "id_stt", referencedColumnName = "id")
     private Stt stt;
@@ -33,4 +39,5 @@ public class District {
 
     @Column(name ="updated", columnDefinition = "TIMESTAMP", nullable = false)
     private LocalDateTime updated = LocalDateTime.now();
+     */
 }

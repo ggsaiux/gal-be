@@ -1,8 +1,6 @@
 package com.asociatialocatari.gal.apart;
 
 import com.asociatialocatari.gal.base.ResourceNotFoundException;
-import com.asociatialocatari.gal.base.exception.UserException;
-import com.asociatialocatari.gal.build_stair.*;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,6 +10,9 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+@CrossOrigin(origins = "*", maxAge = 3600)
+@RestController
+@RequestMapping("/api/aparts/")
 public class ApartController {
 
     private static final Logger logger = LoggerFactory.getLogger(ApartController.class);
