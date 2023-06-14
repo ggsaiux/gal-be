@@ -2,15 +2,15 @@ package com.asociatialocatari.gal.apart;
 
 import com.asociatialocatari.gal.base.exception.ErrorEnum;
 import com.asociatialocatari.gal.base.exception.GalException;
-import com.asociatialocatari.gal.base.models.Stt;
-import com.asociatialocatari.gal.base.repositories.SttRepository;
-import com.asociatialocatari.gal.build_stair.*;
+import com.asociatialocatari.gal.build_stair.BuildStairRepository;
 import org.mapstruct.factory.Mappers;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+
+import static com.asociatialocatari.gal.base.exception.ErrorEnum.RUNTIME_ERROR;
 
 @Service
 public class ApartService {
@@ -21,27 +21,37 @@ public class ApartService {
 
     private final String APART = "apart";
 
+    private final String APARTS = "aparts";
+
     private final ApartRepository apartRepository;
 
     private final BuildStairRepository buildStairRepository;
 
-    private final BuildStairApartRepository buildStairApartRepository;
-
-    private final SttRepository sttRepository;
-
-
-    public ApartService(ApartRepository apartRepository, BuildStairRepository buildStairRepository, BuildStairApartRepository buildStairApartRepository, SttRepository sttRepository) {
+    public ApartService(ApartRepository apartRepository, BuildStairRepository buildStairRepository) {
         this.apartRepository = apartRepository;
         this.buildStairRepository = buildStairRepository;
-        this.buildStairApartRepository = buildStairApartRepository;
-        this.sttRepository = sttRepository;
     }
 
     //todo for ADMINS
-    public Map<String, List<ApartDto>> getAllAparts() {
-        return null;
-    }
 
+    public Map<String, List<ApartDto>> getApartsByBuildStair(long buildStairId) throws GalException {
+        //todo logs
+        //todo exceptions
+
+        Map<String,List<ApartDto>> mapApartDtoList = new HashMap<>();
+        List<ApartDto> apartDtoList = new ArrayList<>();
+        try {
+            List<Apart> apartList = apartRepository.findApartsByBuildStair_Id(buildStairId);
+            for (Apart apart : apartList) {
+                apartDtoList.add(mapper.toApartDto(apart));
+            }
+            mapApartDtoList.put(APARTS, apartDtoList);
+        } catch(Exception e) {
+            logger.error(e.getMessage(), e.getStackTrace());
+            throw new GalException("Error on apartments listing!", RUNTIME_ERROR);
+        }
+        return mapApartDtoList;
+    }
     public Map<String, ApartDto> getApartById(long id) throws GalException {
 
         //todo logs
@@ -79,14 +89,9 @@ public class ApartService {
                         throw new GalException("Error on apartment saving!", ErrorEnum.RUNTIME_ERROR);
                     }
                 } else {
-                    Optional<BuildStair> buildStairOpt = buildStairRepository.findById(buildStairId);
-                    if(buildStairOpt.isPresent()) {
-                        Optional<Stt> sttActiveOpt = sttRepository.findById(1l);
-                        apart = mapper.toApart(apartDto);
-                        //apart.setStt(sttActiveOpt.get()); //set state active
-                        apartRepository.save(apart);
-                        buildStairApartRepository.save(new BuildStairApart(buildStairOpt.get(), apart, sttActiveOpt.get()));
-                    }
+                    apart = mapper.toApart(apartDto);
+                    apart.setBuildStair(buildStairRepository.findById(buildStairId).get());
+                    apartRepository.save(apart);
                 }
                 mapApartDto.put(APART, mapper.toApartDto(apart));
             }

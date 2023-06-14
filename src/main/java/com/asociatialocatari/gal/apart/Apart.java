@@ -1,5 +1,7 @@
 package com.asociatialocatari.gal.apart;
 
+import com.asociatialocatari.gal.base.models.Stt;
+import com.asociatialocatari.gal.build_stair.BuildStair;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
@@ -8,7 +10,6 @@ import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 import java.time.LocalDateTime;
-
 
 @Data
 @Entity
@@ -20,7 +21,6 @@ public class Apart {
     @SequenceGenerator(sequenceName = "gal.apart_id_seq", allocationSize = 1, name = "apart_id_seq")
     private Long id;
 
-    @NotBlank
     @Column(name = "number")
     private Integer number;
 
@@ -40,12 +40,14 @@ public class Apart {
     @Column(name = "m2")
     private Double m2;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(foreignKey = @ForeignKey(name = "apart_build_stair_id_fk"), name = "id_build_stair")
+    private BuildStair buildStair;
+
     @Column(name ="inserted", columnDefinition = "TIMESTAMP", nullable = false, updatable = false)
     private LocalDateTime inserted = LocalDateTime.now();
 
     @Column(name ="updated", columnDefinition = "TIMESTAMP", nullable = false)
-    private LocalDateTime updated;
-
-    //todo evaluate stt here
+    private LocalDateTime updated = LocalDateTime.now();
 
 }

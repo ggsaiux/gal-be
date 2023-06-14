@@ -2,8 +2,11 @@ package com.asociatialocatari.gal.build_stair;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+//import org.mapstruct.NullValueCheckStrategy;
+import org.mapstruct.NullValuePropertyMappingStrategy;
 
-@Mapper
+@Mapper( nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE )
+//@Mapper( nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS )
 public interface BuildStairMapper {
 
     @Mapping(source="district.name", target="district")

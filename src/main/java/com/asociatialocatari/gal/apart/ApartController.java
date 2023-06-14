@@ -17,23 +17,15 @@ public class ApartController {
 
     private static final Logger logger = LoggerFactory.getLogger(ApartController.class);
 
-    private final BuildStairApartService buildStairApartService;
-
     private final ApartService apartService;
 
     private final ApartRepository apartRepository;
 
-    private final BuildStairApartRepository buildStairApartRepository;
-
     public ApartController(
-            BuildStairApartService buildStairApartService,
             ApartService apartService,
-            ApartRepository apartRepository,
-            BuildStairApartRepository buildStairApartRepository) {
-        this.buildStairApartService = buildStairApartService;
+            ApartRepository apartRepository ) {
         this.apartService = apartService;
         this.apartRepository = apartRepository;
-        this.buildStairApartRepository = buildStairApartRepository;
     }
 
     /**
@@ -45,7 +37,7 @@ public class ApartController {
     @PreAuthorize("hasAuthority('ADMINA')")
     public ResponseEntity<?> getApartsByBuildStair(@PathVariable long buildStairId){
         try {
-            return new ResponseEntity<>(buildStairApartService.getApartsByBuildStair(buildStairId), HttpStatus.OK);
+            return new ResponseEntity<>(apartService.getApartsByBuildStair(buildStairId), HttpStatus.OK);
         } catch(Exception e){
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -108,7 +100,6 @@ public class ApartController {
 
         return apartRepository.findById(id)
                 .map(apart -> {
-                    buildStairApartRepository.deleteBuildStairApartByApart(apart);
                     apartRepository.delete(apart);
                     return ResponseEntity.ok().build();
                 }).orElseThrow(() -> new ResourceNotFoundException("Asscociation not found with id " + id));

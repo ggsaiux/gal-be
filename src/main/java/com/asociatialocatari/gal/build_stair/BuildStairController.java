@@ -52,7 +52,7 @@ public class BuildStairController {
 
     @GetMapping("{id}")
     @PreAuthorize("hasAuthority('ADMINA')")
-    public ResponseEntity<?> getBuildById(@PathVariable long id) {
+    public ResponseEntity<?> getBuildStairById(@PathVariable long id) {
         try {
             return new ResponseEntity<>(buildStairService.getBuildStairById(id), HttpStatus.OK);
         } catch(Exception e) {
@@ -88,6 +88,7 @@ public class BuildStairController {
     public ResponseEntity<?> saveBuildStair(@PathVariable("id") long id,
                                       @Valid @RequestBody BuildStairDto buildStairDto) {
         try {
+            // todo id under object from UI
             buildStairDto.setId(id);
             return new ResponseEntity<>(buildStairService.saveBuildStair(buildStairDto, id), HttpStatus.OK);
         } catch(Exception e) {

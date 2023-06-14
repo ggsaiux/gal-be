@@ -74,6 +74,9 @@ public class WebSecurityConfig {
                         .requestMatchers("/api/assos/**").permitAll()
                         .requestMatchers("/api/bss/**").permitAll()
                         .requestMatchers("/api/aparts/**").permitAll()
+                        .requestMatchers("/api/districts/**").permitAll()
+                        .requestMatchers("/api/cities/**").permitAll()
+                        .requestMatchers("/api/provinces/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement((session) -> session

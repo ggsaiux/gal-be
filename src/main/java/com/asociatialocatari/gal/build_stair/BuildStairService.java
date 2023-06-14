@@ -6,6 +6,8 @@ import com.asociatialocatari.gal.base.exception.ErrorEnum;
 import com.asociatialocatari.gal.base.exception.GalException;
 import com.asociatialocatari.gal.base.models.Stt;
 import com.asociatialocatari.gal.base.repositories.SttRepository;
+import com.asociatialocatari.gal.district.District;
+import com.asociatialocatari.gal.district.DistrictRepository;
 import org.mapstruct.factory.Mappers;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,6 +24,7 @@ public class BuildStairService {
 
     //BSS = Builds Stairs
     private final String BSS = "buildStair";  // todo singular
+    private final DistrictRepository districtRepository;
 
     private BuildStairRepository buildStairRepository;
 
@@ -31,11 +34,12 @@ public class BuildStairService {
 
     private final SttRepository sttRepository;
 
-    public BuildStairService(BuildStairRepository buildStairRepository, AssoRepository assoRepository, AssoBuildStairRepository assoBuilStairRepository, SttRepository sttRepository) {
+    public BuildStairService(BuildStairRepository buildStairRepository, AssoRepository assoRepository, AssoBuildStairRepository assoBuilStairRepository, SttRepository sttRepository, DistrictRepository districtRepository) {
         this.buildStairRepository = buildStairRepository;
         this.assoRepository = assoRepository;
         this.assoBuilStairRepository = assoBuilStairRepository;
         this.sttRepository = sttRepository;
+        this.districtRepository = districtRepository;
     }
 
     //todo for ADMINS
@@ -46,7 +50,6 @@ public class BuildStairService {
     public Map<String, BuildStairDto> getBuildStairById(long id) throws GalException {
         //todo logs
         //todo exceptions
-
         Map<String, BuildStairDto> mapBuildStairDto = new HashMap<>();
         try{
             Optional<BuildStair> buildStairOpt = buildStairRepository.findById(id);
@@ -74,6 +77,7 @@ public class BuildStairService {
                     if (buildStairOpt.isPresent()) {
                         buildStair = buildStairOpt.get();
                         buildStair = mapper.toBuildStair(buildStairDto);
+                        buildStair.setDistrict(districtRepository.findDistrictByName(buildStairDto.getDistrict()).get());
                         buildStairRepository.save(buildStair);
                     } else {
                         logger.error("Error on Build & Stair saving!");
@@ -84,7 +88,6 @@ public class BuildStairService {
                     if(assoOpt.isPresent()) {
                         Optional<Stt> sttActiveOpt = sttRepository.findById(1l);
                         buildStair = mapper.toBuildStair(buildStairDto);
-                        buildStair.setStt(sttActiveOpt.get()); //set state active
                         buildStairRepository.save(buildStair);
                         assoBuilStairRepository.save(new AssoBuildStair(assoOpt.get(), buildStair, sttActiveOpt.get()));
                     }

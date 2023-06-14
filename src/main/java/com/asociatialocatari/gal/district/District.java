@@ -5,8 +5,6 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 
-import java.time.LocalDateTime;
-
 @Data
 @Entity
 @Table(name = "district", schema = "gal")
@@ -20,24 +18,9 @@ public class District {
     @Size(min=2, max=30)
     private String name;
 
-    /*
-    @Column
-    private String description;
-     */
-
-    @Column
-    @Size(min=2, max=30)
-    private String city;
-
-    /*
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(foreignKey = @ForeignKey(name = "district_stt_id_fk"), name = "id_stt", referencedColumnName = "id")
-    private Stt stt;
+    @JoinColumn(foreignKey = @ForeignKey(name = "district_city_id_fk"), name = "id_city")
+    private City city;
 
-    @Column(name ="inserted", columnDefinition = "TIMESTAMP", nullable = false, updatable = false)
-    private LocalDateTime inserted = LocalDateTime.now();
 
-    @Column(name ="updated", columnDefinition = "TIMESTAMP", nullable = false)
-    private LocalDateTime updated = LocalDateTime.now();
-     */
 }
