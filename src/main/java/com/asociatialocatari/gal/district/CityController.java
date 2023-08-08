@@ -56,7 +56,7 @@ public class CityController {
     }
 
     @PostMapping("")
-    @PreAuthorize("hasAuthority('ADMINA')")
+    @PreAuthorize("hasAuthority('ADMINS')")
     public ResponseEntity<?> addCity(@Valid @RequestBody City city) {
         try {
             //todo map maybe
@@ -67,7 +67,7 @@ public class CityController {
     }
 
     @PatchMapping("{id}")
-    @PreAuthorize("hasAuthority('ADMINA')")
+    @PreAuthorize("hasAuthority('ADMINS')")
     public ResponseEntity<?> saveCity(@Valid @RequestBody City city) {
         try {
             //todo map maybe
@@ -79,7 +79,7 @@ public class CityController {
 
     @Transactional
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasAuthority('ADMINA')")
+    @PreAuthorize("hasAuthority('ADMINS')")
     public ResponseEntity<?> deleteCity(@PathVariable Long id) throws UserException {
         if(!cityRepository.existsById(id)) {
             throw new ResourceNotFoundException("City not found with id " + id);

@@ -1,6 +1,5 @@
 package com.asociatialocatari.gal.apart;
 
-import com.asociatialocatari.gal.base.models.Stt;
 import com.asociatialocatari.gal.build_stair.BuildStair;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
@@ -16,6 +15,7 @@ import java.time.LocalDateTime;
 @Table(name = "apart", schema = "gal")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Apart {
+
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "apart_id_seq")
     @SequenceGenerator(sequenceName = "gal.apart_id_seq", allocationSize = 1, name = "apart_id_seq")

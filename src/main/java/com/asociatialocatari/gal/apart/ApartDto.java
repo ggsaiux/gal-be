@@ -17,4 +17,6 @@ public class ApartDto {
 
     private Double m2;
 
+    private Long idBuildStair;
+
 }
