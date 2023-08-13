@@ -2,6 +2,9 @@ package com.asociatialocatari.gal.asso;
 
 import java.time.LocalDateTime;
 
+import com.asociatialocatari.gal.district.City;
+import com.asociatialocatari.gal.district.District;
+import com.asociatialocatari.gal.district.Province;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
@@ -44,4 +47,16 @@ public class Asso {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(foreignKey = @ForeignKey(name = "aso_stt_id_fk"), name = "id_stt")
     private Stt stt;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(foreignKey = @ForeignKey(name = "asso_province_id_fk"), name = "id_province", referencedColumnName = "id")
+    private Province province;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(foreignKey = @ForeignKey(name = "asso_city_id_fk"), name = "id_city", referencedColumnName = "id")
+    private City city;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(foreignKey = @ForeignKey(name = "asso_district_id_fk"), name = "id_district", referencedColumnName = "id")
+    private District district;
 }

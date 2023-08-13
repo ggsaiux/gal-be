@@ -3,7 +3,8 @@ package com.asociatialocatari.gal.asso;
 import lombok.Data;
 
 @Data
-public class AssoDto {
+public class AssoInDto {
+
     private Long id;
 
     private String name;
@@ -11,4 +12,10 @@ public class AssoDto {
     private String description;
 
     private String address;
+
+    private long province;
+
+    private long city;
+
+    private long district;
 }

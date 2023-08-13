@@ -54,9 +54,9 @@ public class AssoController {
 
     @PostMapping("")
     @PreAuthorize("hasAuthority('ADMINA')")
-    public ResponseEntity<?> addAsso(@Valid @RequestBody AssoDto assoDto) {
+    public ResponseEntity<?> addAsso(@Valid @RequestBody AssoInDto assoInDto) {
         try {
-            return new ResponseEntity<>(assoService.saveAsso(assoDto), HttpStatus.OK);
+            return new ResponseEntity<>(assoService.saveAsso(assoInDto), HttpStatus.OK);
         } catch(Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -65,15 +65,14 @@ public class AssoController {
     @PatchMapping("{id}")
     @PreAuthorize("hasAuthority('ADMINA')")
     public ResponseEntity<?> saveAsso(@PathVariable("id") long id,
-                                      @Valid @RequestBody AssoDto assoDto) {
+                                      @Valid @RequestBody AssoInDto assoInDto) {
         try {
-            assoDto.setId(id);
-            return new ResponseEntity<>(assoService.saveAsso(assoDto), HttpStatus.OK);
+            assoInDto.setId(id);
+            return new ResponseEntity<>(assoService.saveAsso(assoInDto), HttpStatus.OK);
         } catch(Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
 
     @Transactional
     @DeleteMapping("/{id}")

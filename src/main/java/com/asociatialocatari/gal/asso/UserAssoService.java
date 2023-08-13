@@ -51,18 +51,18 @@ public class UserAssoService {
      * @return
      * @throws GalException
      */
-    public Map<String,List<AssoDto>> getAssosByUser() throws GalException {
+    public Map<String,List<AssoOutDto>> getAssosByUser() throws GalException {
         //todo logs
         //todo exceptions
         User user = utils.getUserFromContext();
-        Map<String,List<AssoDto>> mapAssoDtoList = new HashMap<>();
-        List<AssoDto> assoDtoList = new ArrayList<>();
+        Map<String,List<AssoOutDto>> mapAssoDtoList = new HashMap<>();
+        List<AssoOutDto> assoOutDtoList = new ArrayList<>();
         try {
             List<UserAsso> userAssoList = userAssoRepository.findUserAssosByUser(user);
             for (UserAsso userAsso : userAssoList) {
-                assoDtoList.add(mapper.toAssoDto(userAsso.getAsso()));
+                assoOutDtoList.add(mapper.toAssoOutDto(userAsso.getAsso()));
             }
-            mapAssoDtoList.put(ASSOS, assoDtoList);
+            mapAssoDtoList.put(ASSOS, assoOutDtoList);
         } catch(Exception e) {
             logger.error(e.getMessage(), e.getStackTrace());
             throw new GalException("Error on associations listing!", RUNTIME_ERROR);
@@ -91,12 +91,12 @@ public class UserAssoService {
     }
 
 
- /*   public List<AssoDto> getAssoListByUser(String lngAbbrv) throws GalException {
+ /*   public List<AssoOutDto> getAssoListByUser(String lngAbbrv) throws GalException {
 
         //Map<String,List> mapAsso = new HashMap<>();
         List<AntTableColumn> columns = new ArrayList<>();
         User user = utils.getUserFromContext();
-        List<AssoDto> assoDtoList = new ArrayList<>();
+        List<AssoOutDto> assoDtoList = new ArrayList<>();
         try {
             Optional<Entman> entman = entmanRepository.findById(1L); // find entity/table by id need to be constant
             Optional<Lng> lngOpt = lngRepository.findByAbbrv(lngAbbrv); // find language by abbreviation
@@ -135,7 +135,7 @@ public class UserAssoService {
 //        Map<String,List> mapAsso = new HashMap<>();
 //        List<AntTableColumn> columns = new ArrayList<>();
 //        User user = utils.getUserFromContext();
-//        List<AssoDto> assoDtoList = new ArrayList<>();
+//        List<AssoOutDto> assoDtoList = new ArrayList<>();
 //        try {
 //            Optional<Entman> entman = entmanRepository.findById(1L); // find entity/table by id need to be constant
 //            Optional<Lng> lngOpt = lngRepository.findByAbbrv(lngAbbrv); // find language by abbreviation

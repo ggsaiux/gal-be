@@ -32,7 +32,7 @@ public class DistrictController {
     }
 
     @GetMapping("")
-    @PreAuthorize("hasAuthority('ADMINA')")
+    @PreAuthorize("hasAuthority('ADMINS')")
     public ResponseEntity<?> getDistricts(){
         try {
             Map<String, List<District>> mapDistrictList = new HashMap<>();
@@ -43,8 +43,20 @@ public class DistrictController {
         }
     }
 
-    @GetMapping("id")
-    @PreAuthorize("hasAuthority('ADMINA')")
+    @GetMapping("city/{cityId}")
+    @PreAuthorize("hasAuthorities('ADMINA','ADMINS')")
+    public ResponseEntity<?> getDistrictByCityId(@PathVariable long cityId){
+        try {
+            Map<String, List<District>> mapDistrictList = new HashMap<>();
+            mapDistrictList.put(DISTRICTS, (districtRepository.findDistrictsByCity_IdOrderByName(cityId)).get());
+            return new ResponseEntity<>(mapDistrictList, HttpStatus.OK);
+        } catch(Exception e){
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("{id}")
+    @PreAuthorize("hasAuthorities('ADMINA','ADMINS')")
     public ResponseEntity<?> getDistrictById(@PathVariable long id){
         try {
             Map<String, District> mapDistrict = new HashMap<>();
@@ -59,7 +71,6 @@ public class DistrictController {
     @PreAuthorize("hasAuthority('ADMINS')")
     public ResponseEntity<?> addDistrict(@Valid @RequestBody District district) {
         try {
-            //todo map maybe
             return new ResponseEntity<>(districtRepository.save(district), HttpStatus.OK);
         } catch(Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
@@ -70,7 +81,6 @@ public class DistrictController {
     @PreAuthorize("hasAuthority('ADMINS')")
     public ResponseEntity<?> saveDistrict(@Valid @RequestBody District district) {
         try {
-            //todo map maybe
             return new ResponseEntity<>(districtRepository.save(district), HttpStatus.OK);
         } catch(Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
@@ -78,7 +88,7 @@ public class DistrictController {
     }
 
     @Transactional
-    @DeleteMapping("/{id}")
+    @DeleteMapping("{id}")
     @PreAuthorize("hasAuthority('ADMINS')")
     public ResponseEntity<?> deleteCity(@PathVariable Long id) throws UserException {
         if(!districtRepository.existsById(id)) {

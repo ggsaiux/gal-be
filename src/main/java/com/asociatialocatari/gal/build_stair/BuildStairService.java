@@ -77,7 +77,7 @@ public class BuildStairService {
                     if (buildStairOpt.isPresent()) {
                         buildStair = buildStairOpt.get();
                         buildStair = mapper.toBuildStair(buildStairDto);
-                        buildStair.setDistrict(districtRepository.findDistrictByName(buildStairDto.getDistrict()).get());
+                        //buildStair.setDistrict(districtRepository.findDistrictByName(buildStairDto.getDistrict()).get());
                         buildStairRepository.save(buildStair);
                     } else {
                         logger.error("Error on Build & Stair saving!");

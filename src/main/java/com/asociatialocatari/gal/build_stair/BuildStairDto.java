@@ -13,7 +13,7 @@ public class BuildStairDto {
 
     private String name;
 
-    private String district;
+    //private String district;
 
     private String address;
 

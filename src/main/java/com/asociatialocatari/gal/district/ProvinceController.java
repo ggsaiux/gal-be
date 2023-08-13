@@ -3,6 +3,7 @@ package com.asociatialocatari.gal.district;
 import com.asociatialocatari.gal.base.ResourceNotFoundException;
 import com.asociatialocatari.gal.base.exception.UserException;
 import jakarta.validation.Valid;
+import org.mapstruct.factory.Mappers;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -11,14 +12,16 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
+@CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping("/api/provinces/")
 public class ProvinceController {
     private static final Logger logger = LoggerFactory.getLogger(ProvinceController.class);
+
+    private final ProvinceMapper mapper = Mappers.getMapper(ProvinceMapper.class);
 
     private final ProvinceRepository provinceRepository;
 
@@ -30,20 +33,49 @@ public class ProvinceController {
         this.provinceRepository = provinceRepository;
     }
 
+    /**
+     * for AssoForm AssoOutDto list
+     * @return
+     */
     @GetMapping("")
-    @PreAuthorize("hasAuthority('ADMINA')")
+    @PreAuthorize("hasAnyAuthority('ADMINS','ADMINA')")
     public ResponseEntity<?> getProvinces(){
         try {
-            Map<String, List<Province>> mapProvinceList = new HashMap<>();
-            mapProvinceList.put(PROVINCES, provinceRepository.findAll());
+            Map<String, List<ProvinceDto>> mapProvinceList = new HashMap<>();
+/*
+            List<Province> provinceList = provinceRepository.findAll();
+            List<ProvinceDto> provinceDtoList = new ArrayList<>();
+            for(Province province : provinceList){
+                provinceDtoList.add(mapper.toProvinceDto(province));
+            }
+            mapProvinceList.put(PROVINCES, provinceDtoList);
+*/
+            mapProvinceList.put(PROVINCES,
+                    (provinceRepository.findAll())
+                    .stream()
+                    .sorted(Comparator.comparing(Province::getName))
+                    .map(mapper::toProvinceDto)
+                    .collect(Collectors.toCollection(ArrayList::new)));
             return new ResponseEntity<>(mapProvinceList, HttpStatus.OK);
+
         } catch(Exception e){
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
+    /**
+     * todo get all provinces to manage them ADMINS
+     * @param
+     * @return
+     */
+
+    /**
+     *
+     * @param id
+     * @return
+     */
     @GetMapping("id")
-    @PreAuthorize("hasAuthority('ADMINA')")
+    @PreAuthorize("hasAuthorities('ADMINA','ADMINS')")
     public ResponseEntity<?> getProvinceById(@PathVariable long id){
         try {
             Map<String, Province> mapProvince = new HashMap<>();
@@ -55,10 +87,9 @@ public class ProvinceController {
     }
 
     @PostMapping("")
-    @PreAuthorize("hasAuthority('ADMINA')")
+    @PreAuthorize("hasAuthority('ADMINS')")
     public ResponseEntity<?> addProvince(@Valid @RequestBody Province province) {
         try {
-            //todo map maybe
             return new ResponseEntity<>(provinceRepository.save(province), HttpStatus.OK);
         } catch(Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
@@ -66,10 +97,9 @@ public class ProvinceController {
     }
 
     @PatchMapping("{id}")
-    @PreAuthorize("hasAuthority('ADMINA')")
+    @PreAuthorize("hasAuthority('ADMINS')")
     public ResponseEntity<?> saveProvince(@Valid @RequestBody Province province) {
         try {
-            //todo map maybe
             return new ResponseEntity<>(provinceRepository.save(province), HttpStatus.OK);
         } catch(Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
@@ -78,7 +108,7 @@ public class ProvinceController {
 
     @Transactional
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasAuthority('ADMINA')")
+    @PreAuthorize("hasAuthority('ADMINS')")
     public ResponseEntity<?> deleteProvince(@PathVariable Long id) throws UserException {
         if(!provinceRepository.existsById(id)) {
             throw new ResourceNotFoundException("Province not found with id " + id);

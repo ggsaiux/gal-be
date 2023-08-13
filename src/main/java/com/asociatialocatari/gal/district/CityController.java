@@ -15,6 +15,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping("/api/cities/")
 public class CityController {
@@ -43,8 +44,8 @@ public class CityController {
         }
     }
 
-    @GetMapping("id")
-    @PreAuthorize("hasAuthority('ADMINA')")
+    @GetMapping("{id}")
+    @PreAuthorize("hasAnyAuthority('ADMINA','ADMINS')")
     public ResponseEntity<?> getCityById(@PathVariable long id){
         try {
             Map<String, City> mapCity = new HashMap<>();
@@ -55,11 +56,22 @@ public class CityController {
         }
     }
 
+    @GetMapping("province/{provinceId}")
+    @PreAuthorize("hasAnyAuthority('ADMINS','ADMINA')")
+    public ResponseEntity<?> getCityByProvinceId(@PathVariable long provinceId){
+        try {
+            Map<String, List<City>> mapCityList = new HashMap<>();
+            mapCityList.put(CITIES, (cityRepository.findCitiesByProvince_IdOrderByName(provinceId)).get());
+            return new ResponseEntity<>(mapCityList, HttpStatus.OK);
+        } catch(Exception e){
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
     @PostMapping("")
     @PreAuthorize("hasAuthority('ADMINS')")
     public ResponseEntity<?> addCity(@Valid @RequestBody City city) {
         try {
-            //todo map maybe
             return new ResponseEntity<>(cityRepository.save(city), HttpStatus.OK);
         } catch(Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
@@ -70,7 +82,6 @@ public class CityController {
     @PreAuthorize("hasAuthority('ADMINS')")
     public ResponseEntity<?> saveCity(@Valid @RequestBody City city) {
         try {
-            //todo map maybe
             return new ResponseEntity<>(cityRepository.save(city), HttpStatus.OK);
         } catch(Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
@@ -78,7 +89,7 @@ public class CityController {
     }
 
     @Transactional
-    @DeleteMapping("/{id}")
+    @DeleteMapping("{id}")
     @PreAuthorize("hasAuthority('ADMINS')")
     public ResponseEntity<?> deleteCity(@PathVariable Long id) throws UserException {
         if(!cityRepository.existsById(id)) {

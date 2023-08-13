@@ -39,10 +39,6 @@ public class BuildStair {
     @Column(name = "address")
     private String address;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(foreignKey = @ForeignKey(name = "build_stair_district_id_fk"), name = "id_district", referencedColumnName = "id")
-    private District district;
-
     @Column(name ="inserted", columnDefinition = "TIMESTAMP", nullable = false, updatable = false)
     private LocalDateTime inserted = LocalDateTime.now();
 
