@@ -3,7 +3,7 @@
 
 --drop table gal.user_apartment;
 --drop table gal.build_stair_apartment;
---drop table gal.asso_build_stair;
+-- -- drop table gal.asso_build_stair;
 -- -- drop table gal.build_stair_apartment;
 --drop table gal.apart;
 --drop table gal.asso;
@@ -24,7 +24,7 @@ create table gal.asso
     updated     date,
     id_stt      integer not null,
     id_district integer not null
-        constraint asso_distirict_id_fk
+        constraint asso_district_id_fk
             references gal.district,
     id_city     integer not null
         constraint asso_city_id_fk
@@ -96,7 +96,10 @@ create table gal.build_stair
     name    varchar,
     address  varchar not null,
     inserted date    not null,
-    updated  date
+    updated  date,
+    id_asso  integer not null
+        constraint build_stair_asso_id_fk
+            references gal.build_stair
 );
 
 comment on table gal.build_stair is 'build and stair';
@@ -118,14 +121,18 @@ create table gal.apart
         constraint apart_build_stair_id_fk
             references gal.build_stair,
     inserted       date not null,
-    updated        date
+    updated        date,
+    id_build_stair integer not null
+        constraint apart_build_stair_id_fk
+            references gal.apart
 );
 
 comment on table gal.apart is 'apartments';
 comment on column gal.apart.m2 is 'square metre';
 alter table gal.apart owner to postgres;
 
--- gal.aso_build_stair -----------------------------------------------
+-- gal.asso_build_stair -----------------------------------------------
+/*
 create table gal.asso_build_stair
 (
     id          serial  not null
@@ -146,7 +153,7 @@ create table gal.asso_build_stair
 comment on table gal.asso_build_stair is 'association build stair map';
 alter table gal.asso_build_stair owner to postgres;
 create unique index asso_build_stair__uindex on gal.asso_build_stair (id_asso, id_build_stair);
-
+*/
 -- gal.user_apartment -----------------------------------------------
 create table gal.user_apartment
 (

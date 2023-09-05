@@ -13,6 +13,9 @@ import lombok.Data;
 
 import com.asociatialocatari.gal.base.models.Stt;
 
+/**
+ * Association
+ */
 @Data
 @Entity
 @Table(name = "asso", schema = "gal")

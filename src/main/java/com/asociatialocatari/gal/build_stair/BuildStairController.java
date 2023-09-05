@@ -1,14 +1,12 @@
 package com.asociatialocatari.gal.build_stair;
 
 import com.asociatialocatari.gal.base.ResourceNotFoundException;
-import com.asociatialocatari.gal.base.exception.UserException;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -17,42 +15,41 @@ import org.springframework.web.bind.annotation.*;
 public class BuildStairController {
     private static final Logger logger = LoggerFactory.getLogger(BuildStairController.class);
 
-    private final AssoBuildStairService assoBuildStairService;
-
     private final BuildStairService buildStairService;
 
     private final BuildStairRepository buildStairRepository;
 
-    private final AssoBuildStairRepository assoBuildStairRepository;
-
     public BuildStairController(BuildStairService buildStairService,
-                                AssoBuildStairService assoBuildStairService,
-                                BuildStairRepository buildStairRepository,
-                                AssoBuildStairRepository assoBuildStairRepository) {
-        this.assoBuildStairService = assoBuildStairService;
+                                BuildStairRepository buildStairRepository) {
         this.buildStairService = buildStairService;
         this.buildStairRepository = buildStairRepository;
-        this.assoBuildStairRepository = assoBuildStairRepository;
     }
 
     /**
-     * get builds stairs by asso
+     * List Buildings Satirs by Association
+     *
      * @param assoId
      * @return
      */
     @GetMapping("abs/{assoId}")
     @PreAuthorize("hasAuthority('ADMINA')")
-    public ResponseEntity<?> getBuildsStairsByAsso(@PathVariable long assoId){
+    public ResponseEntity<?> getBuildsStairsByAsso(@PathVariable Long assoId){
         try {
-            return new ResponseEntity<>(assoBuildStairService.getBuildsStairsByAsso(assoId), HttpStatus.OK);
+            return new ResponseEntity<>(buildStairService.getBuildsStairsByAsso(assoId), HttpStatus.OK);
         } catch(Exception e){
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
+    /**
+     * Get Building Stair by ID
+     *
+     * @param id
+     * @return
+     */
     @GetMapping("{id}")
     @PreAuthorize("hasAuthority('ADMINA')")
-    public ResponseEntity<?> getBuildStairById(@PathVariable long id) {
+    public ResponseEntity<?> getBuildStairById(@PathVariable Long id) {
         try {
             return new ResponseEntity<>(buildStairService.getBuildStairById(id), HttpStatus.OK);
         } catch(Exception e) {
@@ -61,55 +58,54 @@ public class BuildStairController {
     }
 
     /**
+     * Add Building Stair
      *
-     * @param id  - assoId
      * @param buildStairDto
      * @return
      */
-    @PostMapping("{id}")
+    @PostMapping("")
     @PreAuthorize("hasAuthority('ADMINA')")
-    public ResponseEntity<?> addBuildStair(@PathVariable("id") long id,
-                                           @Valid @RequestBody BuildStairDto buildStairDto) {
+    public ResponseEntity<?> addBuildStair(@Valid @RequestBody BuildStairDto buildStairDto) {
         try {
-            return new ResponseEntity<>(buildStairService.saveBuildStair(buildStairDto, id), HttpStatus.OK);
+            return new ResponseEntity<>(buildStairService.addBuildStair(buildStairDto), HttpStatus.OK);
         } catch(Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     /**
+     * Update Building Stair
      *
-     * @param id - assoId
+     * @param id
      * @param buildStairDto
      * @return
      */
     @PatchMapping("{id}")
     @PreAuthorize("hasAuthority('ADMINA')")
-    public ResponseEntity<?> saveBuildStair(@PathVariable("id") long id,
+    public ResponseEntity<?> updateBuildStair(@PathVariable("id") Long id,
                                       @Valid @RequestBody BuildStairDto buildStairDto) {
         try {
-            // todo id under object from UI
             buildStairDto.setId(id);
-            return new ResponseEntity<>(buildStairService.saveBuildStair(buildStairDto, id), HttpStatus.OK);
+            return new ResponseEntity<>(buildStairService.updateBuildStair(buildStairDto), HttpStatus.OK);
         } catch(Exception e) {
             //todo error handler
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
-    @Transactional
+    /**
+     * Delete Building Stair
+     *
+     * @param id
+     * @return
+     */
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAuthority('ADMINA')")
-    public ResponseEntity<?> deleteBuildStair(@PathVariable Long id) throws UserException {
-        if(!buildStairRepository.existsById(id)) {
-            throw new ResourceNotFoundException("Build - Stair  not found with id " + id);
-        }
-
+    public ResponseEntity<?> deleteBuildStair(@PathVariable Long id) {
         return buildStairRepository.findById(id)
                 .map(buildStair -> {
-                    assoBuildStairRepository.deleteAssoBuildStairByBuildStair(buildStair);
                     buildStairRepository.delete(buildStair);
                     return ResponseEntity.ok().build();
-                }).orElseThrow(() -> new ResourceNotFoundException("Asscociation not found with id " + id));
+                }).orElseThrow(() -> new ResourceNotFoundException("Building Stair not found with id " + id));
     }
 }

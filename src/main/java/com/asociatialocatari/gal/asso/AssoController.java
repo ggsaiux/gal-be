@@ -11,6 +11,9 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+/**
+ * Association Controller
+ */
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping("/api/assos/")
@@ -32,6 +35,11 @@ public class AssoController {
         this.utils = utils;
     }
 
+    /**
+     * List Associations by User
+     *
+     * @return
+     */
     @GetMapping("ua") //user's assos
     @PreAuthorize("hasAuthority('ADMINA')")
     public ResponseEntity<?> getAssosByUser(){
@@ -42,6 +50,12 @@ public class AssoController {
         }
     }
 
+    /**
+     * Get Association by ID
+     *
+     * @param id
+     * @return
+     */
     @GetMapping("{id}")
     @PreAuthorize("hasAuthority('ADMINA')")
     public ResponseEntity<?> getAssoById(@PathVariable long id) {
@@ -52,6 +66,12 @@ public class AssoController {
         }
     }
 
+    /**
+     * Add Association
+     *
+     * @param assoInDto
+     * @return
+     */
     @PostMapping("")
     @PreAuthorize("hasAuthority('ADMINA')")
     public ResponseEntity<?> addAsso(@Valid @RequestBody AssoInDto assoInDto) {
@@ -62,9 +82,16 @@ public class AssoController {
         }
     }
 
+    /**
+     * Update Association
+     *
+     * @param id
+     * @param assoInDto
+     * @return
+     */
     @PatchMapping("{id}")
     @PreAuthorize("hasAuthority('ADMINA')")
-    public ResponseEntity<?> saveAsso(@PathVariable("id") long id,
+    public ResponseEntity<?> updateAsso(@PathVariable("id") Long id,
                                       @Valid @RequestBody AssoInDto assoInDto) {
         try {
             assoInDto.setId(id);

@@ -9,6 +9,7 @@ import com.asociatialocatari.gal.base.repositories.SttRepository;
 import com.asociatialocatari.gal.district.CityRepository;
 import com.asociatialocatari.gal.district.DistrictRepository;
 import com.asociatialocatari.gal.district.ProvinceRepository;
+import jakarta.transaction.Transactional;
 import org.mapstruct.factory.Mappers;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,8 +17,13 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import java.util.*;
 
+/**
+ * Association Service
+ */
 @Service
 public class AssoService {
+    //todo logs
+    //todo exceptions
 
     private static final Logger logger = LoggerFactory.getLogger(AssoService.class);
 
@@ -61,6 +67,13 @@ public class AssoService {
         return null;
     }
 
+    /**
+     * Get Association by ID
+     *
+     * @param id
+     * @return
+     * @throws GalException
+     */
     public Map<String, AssoOutDto> getAssoById(long id) throws GalException {
         //todo logs
         //todo exceptions
@@ -83,6 +96,14 @@ public class AssoService {
         return mapAssoDto;
     }
 
+    /**
+     * Add or Update Association
+     *
+     * @param assoInDto
+     * @return
+     * @throws GalException
+     */
+    @Transactional
     public Map<String, AssoOutDto> saveAsso(AssoInDto assoInDto) throws GalException {
         //todo logs
         //todo exceptions
@@ -93,6 +114,7 @@ public class AssoService {
                 User user = utils.getUserFromContext();
                 Asso asso = new Asso();
                 if(assoInDto.getId() != null){
+                    //update
                     Optional<Asso> assoOpt = assoRepository.findById(assoInDto.getId());
                     if (assoOpt.isPresent()) {
                         asso = assoOpt.get();
@@ -117,6 +139,7 @@ public class AssoService {
                         throw new GalException("Error on Association saving!", ErrorEnum.RUNTIME_ERROR);
                     }
                 } else {
+                    //add new
                     Optional<Stt> sttActiveOpt = sttRepository.findById(1l);
                     asso = mapper.toAsso(assoInDto);
                     asso.setStt(sttActiveOpt.get()); //set state active
@@ -131,8 +154,6 @@ public class AssoService {
         }
         return mapAssoOutDto;
     }
-
-    public void deleteAssoById(long id) {}
 
     public Page<Asso> findPaginated(int pageNum, int pageSize, String sortField, String sortDirection) {
         return null;

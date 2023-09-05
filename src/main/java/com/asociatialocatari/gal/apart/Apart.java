@@ -10,6 +10,9 @@ import lombok.Data;
 
 import java.time.LocalDateTime;
 
+/**
+ * Apartment
+ */
 @Data
 @Entity
 @Table(name = "apart", schema = "gal")

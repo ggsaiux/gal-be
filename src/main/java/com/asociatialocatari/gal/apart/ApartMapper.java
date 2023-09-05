@@ -2,6 +2,9 @@ package com.asociatialocatari.gal.apart;
 
 import org.mapstruct.*;
 
+/**
+ * Apartment Mapper
+ */
 @Mapper( nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE )
 public interface ApartMapper {
 

@@ -1,8 +1,8 @@
-package com.asociatialocatari.gal.apart;
+package com.asociatialocatari.gal.cost;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface UserApartRepository extends JpaRepository<UserApart, Long> {
+public interface CostApartRepository extends JpaRepository<CostApart, Long> {
 }
