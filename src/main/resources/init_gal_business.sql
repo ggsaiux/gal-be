@@ -1,5 +1,5 @@
 -- GAL Gestiune Asociatii Locatari
--- init_gal_business_logic.sql
+-- init_gal_business.sql
 
 --drop table gal.user_apartment;
 --drop table gal.build_stair_apartment;

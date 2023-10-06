@@ -1,5 +1,5 @@
 -- GAL Gestiune Asociatii Locatari
--- init_gal_events_news_logic.sql
+-- init_gal_events.sql
 
 --drop table gal.event;
 
