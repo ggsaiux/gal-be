@@ -12,23 +12,6 @@ drop table gal.role;
 drop table gal.user_role;
 
 
--- gal.multi_lng -----------------------------------------------
-create table if not exists gal.multi_lng
-(
-    id        serial
-        constraint multi_lng_pk
-            primary key,
-    base_name varchar,
-    lng_name  varchar,
-    id_entman integer not null
-        constraint multi_lng_entman_id_fk
-            references gal.entman,
-    id_lng integer not null
-        constraint multi_lng_lng_id_fk
-            references gal.lng
-);
-comment on table gal.multi_lng is 'map english name to other language';
-create unique index multi_lng__uindex on gal.multi_lng (base_name, id_entman, id_lng);
 
 
 -- gal.entman -----------------------------------------------
@@ -98,6 +81,24 @@ insert into gal.lng(abbrv, name) values('en', 'english');
 insert into gal.lng(abbrv, name) values('de', 'deutsch');
 insert into gal.lng(abbrv, name) values('ro', 'romana');
 
+-- gal.multi_lng -----------------------------------------------
+create table if not exists gal.multi_lng
+(
+    id        serial
+        constraint multi_lng_pk
+            primary key,
+    base_name varchar,
+    lng_name  varchar,
+    id_entman integer not null
+        constraint multi_lng_entman_id_fk
+            references gal.entman,
+    id_lng integer not null
+        constraint multi_lng_lng_id_fk
+            references gal.lng
+);
+comment on table gal.multi_lng is 'map english name to other language';
+create unique index multi_lng__uindex on gal.multi_lng (base_name, id_entman, id_lng);
+
 -- gal.role -----------------------------------------------
 create table gal.role
 (
@@ -115,6 +116,7 @@ insert into gal.role(name, description) values('ADMIN_SYS', 'System Administrato
 insert into gal.role(name, description) values('ADMIN_ASO', 'Association Administrator');
 insert into gal.role(name, description) values('LOCATAR', 'Locatar');
 insert into gal.role(name, description) values('USER', 'User');
+insert into gal.role(name, description) values('PROP', 'Proprietar');
 
 -- gal.rule -----------------------------------------------
 create table gal.rule
@@ -137,7 +139,7 @@ create table gal.user
             primary key,
     username       varchar not null,
     password       varchar not null,
-    email          varchar not null,
+    email          varchar, --not null,
     inserted    date    not null,
     updated     date,
     id_lng      integer not null

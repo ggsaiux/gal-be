@@ -52,6 +52,15 @@ comment on table gal.province is 'province';
 alter table gal.province owner to postgres;
 create unique index province_name__uindex on gal.province (name);
 
+insert into gal.province(id, name, abbrv) values(1, 'Brașov', 'BV');
+insert into gal.province(id, name, abbrv) values(2, 'Sibiu', 'SB');
+insert into gal.province(id, name, abbrv) values(3, 'Cluj', 'CJ');
+insert into gal.province(id, name, abbrv) values(4, 'Covasna', 'CV');
+insert into gal.province(id, name, abbrv) values(5, 'Prahova', 'PH');
+insert into gal.province(id, name, abbrv) values(6, 'Vâlcea', 'VL');
+insert into gal.province(id, name, abbrv) values(7, 'București', 'B');
+insert into gal.province(id, name, abbrv) values(8, 'Buzău', 'BZ');
+
 -- gal.city -----------------------------------------------
 create table gal.city
 (
@@ -69,6 +78,12 @@ comment on table gal.city is 'city';
 alter table gal.city owner to postgres;
 create unique index city_name_id_province__uindex on gal.city (name, id_province);
 
+insert into gal.city(id, name, id_province) values(1, 'Brașov', 1);
+insert into gal.city(id, name, id_province) values(2, 'Codlea', 1);
+insert into gal.city(id, name, id_province) values(3, 'Făgăraș', 1);
+insert into gal.city(id, name, id_province) values(4, 'Rupea', 1);
+insert into gal.city(id, name, id_province) values(5, 'Zărnești', 1);
+
 
 -- gal.district -----------------------------------------------
 create table gal.district
@@ -84,7 +99,14 @@ create table gal.district
 
 comment on table gal.district is 'district';
 alter table gal.district owner to postgres;
-create unique index district_name_id_city__uindex on gal.district (name, id_city);
+create unique index district_name_id_city__uindex on gal.district (name, id_city)
+
+insert into gal.district(id, name, id_city) values(1, 'Civic', 1);
+insert into gal.district(id, name, id_city) values(2, 'Măgura', 1);
+insert into gal.district(id, name, id_city) values(3, '9 Mai', 1);
+insert into gal.district(id, name, id_city) values(4, 'Colorom', 1);
+insert into gal.district(id, name, id_city) values(5, 'Codlea Nord', 1);
+
 
 -- gal.build_stair -----------------------------------------------
 create table gal.build_stair

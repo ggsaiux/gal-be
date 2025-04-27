@@ -182,7 +182,7 @@ public class AuthController {
             UserRole userRole = new UserRole();
             userRole.setUser(userUp);
             userRole.setRole(defaultRole);
-            //userRole.setStt(defaultStt);
+            userRole.setStt(defaultStt);
             userRoleRepository.saveAndFlush(userRole);
         } catch(Exception e){
             logger.error(e.getMessage());
