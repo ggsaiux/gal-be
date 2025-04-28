@@ -8,6 +8,7 @@ import jakarta.validation.constraints.Size;
 
 import lombok.Data;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 /**
@@ -41,7 +42,7 @@ public class Apart {
     private Integer tenantsNumber;
 
     @Column(name = "m2")
-    private Double m2;
+    private BigDecimal m2;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(foreignKey = @ForeignKey(name = "apart_build_stair_id_fk"), name = "id_build_stair")

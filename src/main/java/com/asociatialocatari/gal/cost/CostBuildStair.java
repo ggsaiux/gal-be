@@ -6,6 +6,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 /**
@@ -50,5 +51,5 @@ public class CostBuildStair {
     private CostRepartition costRepartition;
 
     @Column(columnDefinition = "cost", precision = 10, scale = 2)
-    private Double cost;
+    private BigDecimal cost;
 }

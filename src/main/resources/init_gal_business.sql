@@ -99,7 +99,7 @@ create table gal.district
 
 comment on table gal.district is 'district';
 alter table gal.district owner to postgres;
-create unique index district_name_id_city__uindex on gal.district (name, id_city)
+create unique index district_name_id_city__uindex on gal.district (name, id_city);
 
 insert into gal.district(id, name, id_city) values(1, 'Civic', 1);
 insert into gal.district(id, name, id_city) values(2, 'Măgura', 1);
@@ -138,7 +138,7 @@ create table gal.apart
     last_name      varchar not null,
     first_name     varchar not null,
     tenants_number integer not null,
-    m2             double precision,
+    m2             numeric(5,2),
     id_build_stair  integer not null
         constraint apart_build_stair_id_fk
             references gal.build_stair,
