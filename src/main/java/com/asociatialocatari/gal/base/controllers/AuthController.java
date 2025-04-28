@@ -12,6 +12,7 @@ import com.asociatialocatari.gal.base.repositories.*;
 import com.asociatialocatari.gal.base.security.jwt.JwtUtils;
 import com.asociatialocatari.gal.base.security.services.UserDetailsImpl;
 import com.asociatialocatari.gal.base.security.services.UserDetailsServiceImpl;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
@@ -77,6 +78,7 @@ public class AuthController {
         this.userDetailsService = userDetailsService;
     }
 
+    @Operation(summary = "Login")
     @PostMapping("/login")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
 
@@ -99,6 +101,7 @@ public class AuthController {
                 roles));
     }
 
+    @Operation(summary = "Sign Up")
     @Transactional
     @PostMapping("/signup")
     public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
