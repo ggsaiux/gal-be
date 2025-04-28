@@ -1,4 +1,4 @@
-package com.asociatialocatari.gal.district;
+package com.asociatialocatari.gal.city;
 
 import lombok.Data;
 

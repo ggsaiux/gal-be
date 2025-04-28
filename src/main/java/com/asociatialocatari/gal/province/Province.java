@@ -1,4 +1,4 @@
-package com.asociatialocatari.gal.district;
+package com.asociatialocatari.gal.province;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;

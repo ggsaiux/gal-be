@@ -1,4 +1,4 @@
-package com.asociatialocatari.gal.district;
+package com.asociatialocatari.gal.province;
 
 import com.asociatialocatari.gal.base.ResourceNotFoundException;
 import com.asociatialocatari.gal.base.exception.UserException;

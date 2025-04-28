@@ -1,4 +1,4 @@
-package com.asociatialocatari.gal.district;
+package com.asociatialocatari.gal.province;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.NullValuePropertyMappingStrategy;

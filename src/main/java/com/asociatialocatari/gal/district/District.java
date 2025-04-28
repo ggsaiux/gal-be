@@ -1,6 +1,6 @@
 package com.asociatialocatari.gal.district;
 
-import com.asociatialocatari.gal.base.models.Stt;
+import com.asociatialocatari.gal.city.City;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
 import lombok.Data;

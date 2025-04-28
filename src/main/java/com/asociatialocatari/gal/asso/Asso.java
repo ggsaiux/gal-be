@@ -2,9 +2,9 @@ package com.asociatialocatari.gal.asso;
 
 import java.time.LocalDateTime;
 
-import com.asociatialocatari.gal.district.City;
+import com.asociatialocatari.gal.city.City;
 import com.asociatialocatari.gal.district.District;
-import com.asociatialocatari.gal.district.Province;
+import com.asociatialocatari.gal.province.Province;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
